@@ -10,7 +10,7 @@ description: "围绕设备或诊断单在时间段内的健康状态评估。"
 
 ## 工作流程 (Workflow)
 
-### 不要查询网页，只调用如下工具。
+### 按步骤串行执行。
 
 1. 使用工具 `mcp-device-sse_cg_device_healthy`。
 
