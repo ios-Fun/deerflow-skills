@@ -1,6 +1,6 @@
 ---
 name: "unit-healthy"
-description: "机组健康度评估。通过MCP工具获取机组诊断单、故障模式推导图、测点实时值，由大模型初步分析后，Java后端根据分析结果调用RAG检索相关知识，最终大模型结合RAG输出完整健康度报告。"
+description: "机组健康度评估。用户查询机组状态、健康时调用，通过MCP工具获取机组诊断单、故障模式推导图、测点实时值，由大模型初步分析后，根据分析结果调用RAG检索相关知识，最终结合RAG输出完整健康度报告。"
 ---
 
 # 机组健康度评估 (Unit Healthy)
@@ -12,16 +12,16 @@ description: "机组健康度评估。通过MCP工具获取机组诊断单、故
 本 Skill 采用 **两阶段分析** 模式：
 
 1. **第一阶段（MCP取数 + 初步分析）**：通过 MCP 工具获取诊断单、故障模式层级图、测点实时值，你进行初步分析并输出结构化的分析摘要。
-2. **第二阶段（RAG增强 + 最终报告）**：Java 后端根据你的初步分析摘要，自动提取关键词调用 RAG 检索相关知识，将 RAG 结果补充到上下文后，你输出最终的健康度报告。
+2. **第二阶段（RAG增强 + 最终报告）**：根据初步分析摘要，自动提取关键词调用 RAG 检索相关知识，将 RAG 结果补充到上下文后，你输出最终的健康度报告。
 
 ## 可用工具 (Capabilities)
 
 | 工具名称 | 功能说明 | 输入参数 | 输出说明 |
 |---|---|---|---|
-| `select_incidents` | 查询机组诊断单列表 | `unit_name`(机组名,必填), `start_time`, `end_time`, `num`, `time_unit`(day/week/month/year), `closed` | 诊断单 JSON 列表 |
-| `graph_show` | 获取故障模式推导图 | `incident_ids`(诊断单ID列表) | Markdown 格式的层级树 |
-| `tags_realtime` | 获取测点实时值 | `incident_ids`(诊断单ID列表) | 测点数据文本 |
-| `device_rag` | RAG 知识检索 | `tag_name`(测点名称，逗号分隔) | RAG 检索结果 |
+| `unit_select_incidents` | 查询机组诊断单列表 | `unit_name`(机组名,必填), `start_time`, `end_time`, `num`, `time_unit`(day/week/month/year), `closed` | 诊断单 JSON 列表 |
+| `unit_graph_show` | 获取故障模式推导图 | `incident_ids`(诊断单ID列表) | Markdown 格式的层级树 |
+| `unit_tags_realtime` | 获取测点实时值 | `incident_ids`(诊断单ID列表) | 测点数据文本 |
+| `unit_device_rag` | RAG 知识检索 | `tag_name`(测点名称，逗号分隔) | RAG 检索结果 |
 | `get_alarm_list` | 查询测点报警单列表 | `unit_id`, `tag_name`, `start_time`, `end_time`, `asset_number`, `data_type`, `current_status_name`, `tag_id`, `monitor_point_id`, `closed` | 报警单列表 |
 | `get_system_incident_list` | 查询系统诊断单列表 | `unit_id`, `system_id`, `start_time`, `end_time`, `current_status`, `closed` | 系统诊断单列表 |
 | `get_sub_system_incident_list` | 查询子系统诊断单列表 | `unit_id`, `sub_system_id`, `start_time`, `end_time`, `current_status`, `closed` | 子系统诊断单列表 |
@@ -32,7 +32,7 @@ description: "机组健康度评估。通过MCP工具获取机组诊断单、故
 
 ### 第一步：获取机组诊断单
 
-调用 `select_incidents`，传入机组名称和时间范围。
+调用 `unit_select_incidents`，传入机组名称和时间范围。
 
 - 如果用户未指定时间，默认使用最近 7 天。
 - 如果返回为未查到相关机组信息，不执行下面任何流程，让用户确认下查询机组名称，确认后在重新执行流程。
@@ -41,14 +41,14 @@ description: "机组健康度评估。通过MCP工具获取机组诊断单、故
 
 ### 第二步：获取故障模式推导图
 
-根据诊断单 `incidentId` 列表，调用 `graph_show`。
+根据诊断单 `incidentId` 列表，调用 `unit_graph_show`。
 
 - 输入参数：`incident_ids: [123, 456]`
 - 仔细分析层级图，理解每个故障模式下关联了哪些特征和测点。
 
 ### 第三步：获取测点实时值
 
-根据诊断单 `incidentId` 列表，调用 `tags_realtime`。
+根据诊断单 `incidentId` 列表，调用 `unit_tags_realtime`。
 
 - 输入参数：`incident_ids: [123, 456]`
 - 关注测点值是否有异常波动、超限等情况。
@@ -83,15 +83,15 @@ description: "机组健康度评估。通过MCP工具获取机组诊断单、故
 关键内容1, 关键内容2, 关键内容3
 ```
 
-> **关键**：`### RAG检索关键关键内容` 部分是 Java 后端提取 RAG 参数的依据。关键关键内容要精简，每个关键关键内容尽量 50 字以内，用逗号分隔。关键关键内容应围绕故障模式、异常测点、设备名称等核心内容。
+> **关键**：`### RAG检索关键关键内容` 部分是 Java 后端提取 RAG 参数的依据。关键关键内容要精简，每个关键内容尽量 50 字以内，用逗号分隔。关键关键内容应围绕故障模式、异常测点、设备名称等核心内容。
 
 ### 第五步（可选）：补充查询报警单和诊断单统计数据
 
 **触发条件**：在完成第四步初步分析后，若发现以下情况，可调用此步骤补充数据：
-- 诊断单信息不足以支撑全面分析
+- 诊断单信息、故障信息、测点信息不足以支撑全面分析
 - 缺少告警层面的整体态势信息
 - 需要了解系统/子系统级别的问题分布
-- 用户明确要求查看报警统计
+- 用户明确要求查看其他报警统计
 - 用户查询的机组下没有诊断单
 
 根据实际需要，选择调用以下一个或多个工具：
@@ -158,11 +158,11 @@ description: "机组健康度评估。通过MCP工具获取机组诊断单、故
 - 主要子系统问题：[简要描述]
 ```
 
-> **注意**：此步骤为可选，仅在初步分析后发现数据不足时执行。如果跳过此步骤，直接进入第六步。
+> **注意**：此步骤为可选，仅在初步分析后发现数据不足时执行。如果数据足够跳过此步骤，直接进入第六步。
 
 ### 第六步：输出最终健康度报告
 
-Java 后端会根据你第四步的 RAG 检索关键内容，自动调用 `device_rag` 并将检索结果补充到上下文中。当你收到包含 `<RAG_RESULTS>` 标签的消息时，说明 RAG 数据已就绪。
+根据你第四步的 RAG 检索关键内容，自动调用 `unit_device_rag` 并将检索结果补充到上下文中。当你收到包含 `<RAG_RESULTS>` 标签的消息时，说明 RAG 数据已就绪。
 
 此时，综合所有数据，输出一份结构化的健康度分析报告：
 
