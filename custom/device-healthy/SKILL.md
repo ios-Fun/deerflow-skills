@@ -1,6 +1,6 @@
 ---
 name: "device-healthy"
-description: "围绕设备或诊断单在时间段内的健康状态评估。"
+description: "围绕设备在时间段内的健康状态评估。"
 ---
 
 # 设备健康状态评估 (Device Healthy)
