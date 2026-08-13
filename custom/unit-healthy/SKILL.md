@@ -18,7 +18,6 @@ allowed-tools:
   - unit_graph_show
   - unit_tags_realtime
   - unit_device_rag
-  - write_file
 
 ---
 
@@ -42,16 +41,6 @@ allowed-tools:
 调用 `unit_select_incidents`
 - 如果用户未指定时间，默认查询最近半小时的。
 - 如果返回结果包含"未匹配到机组"，说明输入的机组名无法匹配。工具会自动返回系统中可用的机组列表，请将列表展示给用户选择，用户确认后使用选中的机组名称重新执行流程。
-调用 `write_file` 将 Step1 返回的**完整 JSON** 写入临时文件：
-```json
-{
-  "name": "write_file",
-  "arguments": {
-    "path": "/mnt/user-data/workspace/.incidents_temp.json",
-    "content": "完整返回的JSON数据"
-  }
-}
-```
 
 ## Step2 查询报警单
 
@@ -67,8 +56,7 @@ allowed-tools:
 
 ## Step4 分析故障诊断单
 
-调用 read_file 读取 /mnt/user-data/workspace/.incidents_temp.json， 提取所有 incidentId 到数组IncidentIDs中，对IncidentIDs中的诊断单进行分析：
-- 从 .incidents_temp.json 的数据中提取**所有** incidentId，**必须全部传入**，不得遗漏、不得筛选。
+调用 read_file 读取 /mnt/user-data/workspace/.mcp_capture_log.json，找到 `tool` 为 `unit_select_incidents` 的条目，提取 `incident_ids` 用于下述三个接口的参数，**必须全部传入**，不得遗漏、不得筛选。
 - 调用 `unit_mount_path` 获取基于机组的设备层级路径。
 - 调用 `unit_graph_show` 获取故障知识图谱。
 - 调用 `unit_tags_realtime` 获取诊断单生成时关联运行参数前后半小时内统计数据。
@@ -84,8 +72,8 @@ allowed-tools:
 # Output
 
 生成最终报告前：
-1. 读取 `output.md`，按照其中定义的报告结构生成《机组健康状态评估报告》。
-2. 报告中涉及故障分析前端动态渲染的内容，读取 `schemas/fault-analysis.md` 下对应的渲染协议。
+1. 读取 `output.md`文件，按照其中定义的报告结构生成《机组健康状态评估报告》，报告直接输出，不需要写入文件。
+2. 报告中涉及故障分析前端动态渲染的内容，读取 `schemas/fault-analysis.md` 文件下对应的渲染协议。
 3. 严格遵循对应协议输出结构化数据，禁止自行修改协议定义的字段、类型和固定值。
 4. 未定义渲染协议的内容，直接使用 Markdown 输出。
 
@@ -95,7 +83,8 @@ allowed-tools:
 - 在Step1流程中，未查询到诊断单时，可以直接返回该机组在查的时间段中运行正常，无需调用别的mcp工具。
 - 在Step2流程中，未查询到报警单数据时，直接返回该机组在查的时间段中运行正常，不要重复调用确认。
 - 故障分析中，层级路径、测点数据与故障知识图谱结合分析，RAG 仅作为辅助依据，不得覆盖实际数据。
+- 在分析诊断单的时候，对每个诊断单都必须单独分析，不要将相似的内容进行合并。
 - MCP 工具调用失败时说明原因，并继续分析已有数据；结论必须基于工具返回的数据，不得臆造。
 - 根据内容需要可生成结构化表格、趋势描述、图表分析等，如需图表请输出 ECharts/Mermaid 的配置代码。
 - **在报告的最前端，不要生成概述性文本，更不要显示纯英文段落内容。**
-- **不要生成markdown文件，更不要将报告内容写入这个markdown，直接输出markdown格式文本内容即可**
+- **不要生成markdown文件，更不要将报告内容写入这个markdown，直接输出markdown格式文本内容即可**]
