@@ -13,7 +13,7 @@
 ```json
 {
   "type": "fault_analysis",
-  "version": "1.0",
+  "title": "推导图",
   "incidentId": 0
 }
 ```
