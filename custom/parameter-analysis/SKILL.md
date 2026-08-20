@@ -11,11 +11,20 @@ description:
   - 查询线路保护动作时间、故障发生设备与时间；
   - 查询线路下挂接箱变/逆变器数量；
   - 故障线路恢复送电操作建议。
+
+  示例：
+  - 看下A给水泵当前温度是否正常
+  - 当前哪几条集电线路处于分闸断开状态
+  - 光伏集电线有无保护跳闸断线告警
+  - 集电2线保护跳闸发生在几点？
+  - 集电3线下挂接多少台箱变、逆变器？
+  - 故障线路恢复送电需要哪些操作？
 allowed-tools:
   - get_tags_of_instance
   - get_tag_statistic_data
   - get_tag_values
   - get_last_time_by_switch_name
+  - ask_clarification
 ---
 
 # Parameter Analysis
@@ -28,7 +37,7 @@ allowed-tools:
 - 如果 message 中存在 `<user_enrichment>`：
   - 必须协同使用 `<user_enrichment>` 中提供的实体信息。
   - 不得使用用户原始问题中的同名或近似名称替换已识别实体。
-  - 如果数据中包含有多个设备，调用"ask_clarification" 向用户确队分析哪个设备
+  - 如果数据中包含有多个设备，调用`ask_clarification` 向用户确队分析哪个设备，options 应提供`<user_enrichment>`中的最相近的实例，后续流程均不再进行。
 - 如果 message 中不存在 `<user_enrichment>`：
   - 禁止根据用户问题自行截取、拼接、猜测或生成实体名称。
   - 中止回答，回复用户未匹配到相关实体（部件、设备、系统、子系统），让用户重新确认下。
