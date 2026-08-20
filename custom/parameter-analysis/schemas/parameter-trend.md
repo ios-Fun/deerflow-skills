@@ -20,7 +20,7 @@
   },
   "series": [
     {
-      "tagName": "凝结水泵A轴承温度",
+      "tagId": 0,
       "unit": "℃"
     }
   ]
