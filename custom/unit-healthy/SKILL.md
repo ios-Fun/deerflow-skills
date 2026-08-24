@@ -18,7 +18,7 @@ allowed-tools:
   - unit_graph_show
   - unit_tags_realtime
   - unit_device_rag
-
+  - ask_clarification
 ---
 
 # Explanation of Proper Names
@@ -35,6 +35,20 @@ allowed-tools:
 在分析过程中，应遵循“数据分析为基础、设备机理为依据、知识图谱为支撑、案例经验为参考”的原则，避免简单依据单一测点超限进行判断，而应结合多参数关联变化、设备运行工况及历史趋势进行综合诊断。
 
 # Workflow
+
+## 执行前实体校验
+
+本 Skill 基于已识别并确认的实体执行分析。
+在本skill处理内，仅处理skill层面的内容， 如果在前面的确认实体的步骤内时，匹配到的类型`type`不是机组，必须调用`ask_clarification` 要求用户重新输入正确的机组名称，并告知用户当前输入的内容无法正常匹配。
+
+本 Skill 基于已识别并确认的实体执行分析。
+- 如果 message 中存在 `<user_enrichment>`：
+  - 必须协同使用 `<user_enrichment>` 中提供的实体信息。
+  - 不得使用用户原始问题中的同名或近似名称替换已识别实体。
+  - 如果数据中包含有多个设备，调用`ask_clarification` 向用户确队分析哪个机组，options 应提供`<user_enrichment>`中的最相近的实例，后续流程均不再进行。
+- 如果 message 中不存在 `<user_enrichment>`：
+  - 禁止根据用户问题自行截取、拼接、猜测或生成实体名称。
+  - 中止回答，回复用户未匹配到相关实体（机组），让用户重新确认下。
 
 ## Step1 查询诊断单
 
