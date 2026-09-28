@@ -1,13 +1,14 @@
 ---
 name: "benchmark"
 description: 
-  机组运行经济性综合分析，寻优评估单，支持以下场景：
+  机组运行经济性综合分析，寻优评估单，寻优模型，支持以下场景：
   1. 单台机组整体经济性评价（煤耗、厂用电、锅炉效率、汽机热耗），输出“较优/一般/偏差”及主要拖累项。
   2. 两台机组经济性横向对比（需先判断工况可比性）。
   3. 任意设备（锅炉、引风机、汽机等）的优化空间分析，筛选未达标杆的可调因素，按节能潜力排序。
   4. 引风机（或类似转动机械）的最优参数优化建议，自动识别是系统阻力还是设备自身问题。
   5. 新增寻优评估单查询：提取时间获取对应评估单。
   6. 单台机组指标偏离标杆排序：按偏差程度列出偏离明显指标，说明实际值、标杆值、偏差值/偏差率、可调性、所属系统，区分工况差异与值得运行调整项。
+  7. 寻优模型相关判断：寻优模型分析原理，寻优模型构成等相关内容。
 
   所有设备名称作为参数，不写死在 Skill 逻辑中。
 
@@ -20,6 +21,7 @@ description:
   - 汽轮机还有优化空间吗？（同样适用）
   - 今天有没有新的寻优评估单？
   - 现在#1机有哪些指标偏离标杆比较明显？
+  - 2机组排烟温度这个寻优模型是怎么分析的？为什么这个模型把这些参数作为影响因素？
 allowed-tools:
   - get_unit_list
   - query_indicators
@@ -27,6 +29,7 @@ allowed-tools:
   - getEvaluationList
   - benchmarkTarget # 获取指定节点下相关的标杆信息可能有多个 
   - benchmarkEvaluation #找到同一目标同工况下评估单因素对比信息
+  - getSimilarityBenchmarkDetails
 ---
 
 # Explanation of Proper Names
@@ -58,11 +61,12 @@ allowed-tools:
 ## 数据获取
 
 ## 场景路由表
-| 用户问题类型   | 场景文件                                      |
-|----------|-------------------------------------------|
-| 机组经济性问题  | `scenarios/scenario-1-unit-status.md`     |
+| 用户问题类型     | 场景文件                                      |
+|------------|-------------------------------------------|
+| 机组经济性问题    | `scenarios/scenario-1-unit-status.md`     |
 | 设备系统参数优化问题 | `scenarios/scenario-2-optimize.md` |
-| 机组横向对比   | `scenarios/scenario-1-unit-contrast.md`   |
-| 新增寻优评估单查询    | `scenarios/scenario-1-evaluation.md`     |
+| 机组横向对比     | `scenarios/scenario-1-unit-contrast.md`   |
+| 新增寻优评估单查询  | `scenarios/scenario-1-evaluation.md`     |
 | 机组指标偏离标杆排序 | `scenarios/scenario-1-deviation-ranking.md` |
+| 寻优模型与判据解释  | `scenarios/scenario-1-model.md` |
 
