@@ -17,6 +17,7 @@ allowed-tools:
   - getBenchmarkByTagCode
   - getRangeValue
   - getLastEvaluation
+  - getHistoryEvaluation
 ---
 
 # Explanation of Proper Names
