@@ -2,9 +2,11 @@
 name: stage-identify
 parent: startstop-assistant
 allowed-tools:
-  - match_for_best
-  - stageRecord
-  - startStopCondition
+   - match_for_best
+   - stageRecord
+   - get_best_record
+   - startStopDetails
+   - startStopCondition
 ---
 
 # 场景C：启停阶段识别
@@ -21,6 +23,7 @@ allowed-tools:
 | C1 启停阶段与步骤查询 | 当前启动/停机处于哪个阶段、并网前剩余步骤与条件、阶段切换时间点 | 1   |
 | C2 启动类型判定    | 当前是冷态/温态/热态启动                    | 2   |
 | C3 启动/停止条件判断 | 暖机阶段相关/盘车/停止条件相关                 | 3   |
+| C4 启机阶段预测 | 并网、达到负荷、打闸相关                 | 4   |
 
 > 两个分支优先级相同，互斥命中：仅出现“冷态/温态/热态 / 启动类型 / 启动模式”类关键词 → C2；其余阶段/步骤/切换时间类 → C1。
 
@@ -46,7 +49,7 @@ allowed-tools:
 2. 调用 `stageRecord`：
    - `nodeId` = 前置步骤返回的 `id`
    - `eventName` = `启动` 或 `停机`
-   获取当前阶段信息、已完成阶段清单、阶段切换时间线。
+     获取当前阶段信息、已完成阶段清单、阶段切换时间线。
 3. 依据问句子意图组装输出：
    - **子意图 a｜当前所处阶段**：当前阶段名称、阶段开始时间、本阶段已持续时长、本阶段主要完成项、下一阶段目标。
    - **子意图 b｜并网前剩余步骤与条件**：当前阶段下尚未完成的关键步骤与必须满足的条件；只展示信息，不直接下达操作指令。
@@ -65,7 +68,7 @@ allowed-tools:
 2. 调用 `stageRecord`：
    - `nodeId` = 前置步骤返回的 `id`
    - `eventName` = `启动`
-   取返回结果第一层级下 `startDatas` 节点。
+     取返回结果第一层级下 `startDatas` 节点。
 3. 从 `startDatas` 中读取：
    - `currentStartMode`：启动模式
    - `currentStartModeDesc`：判定依据描述
@@ -88,17 +91,26 @@ allowed-tools:
 2. 调用工具 `stageRecord`：
    - `nodeId` = 前置步骤返回的 `id`
    - `eventName` = `启动` 或 `停机` (盘车相关问题传`停机`)
-   获取当前启动阶段信息
+     获取当前启动阶段信息
 3. 调用工具 `startStopCondition`:
    - `condition` =  暖机相关问题参数传`暖机` , 停止盘车相关问题参数传`盘车`，循环水系统相关问题参数传`循环水系统`
    - `nodeId` = `stageRecord` 工具返回的第一层节点的 `id`
-   获取核心参数判断是否满足暖机/盘车/等其他要求
+     获取核心参数判断是否满足暖机/盘车/等其他要求
 4. 依据问句子意图组装输出：
    - **子意图 a｜还需要暖机多久**：核查核心参数，结合规程条件估算剩余暖机时间，并说明当前是否满足升负荷条件。
    - **子意图 b｜暖机阶段哪些条件还没有满足**：按暖机结束条件逐项展示当前值、标准值和判断结果，重点列出未满足条件及预计改善方向。
    - **子意图 c｜停止条件判定**：判断是否具备停止条件、是否可以中断
 5. 无正在进行启动事件 → 兜底 F8。
 
+## C4:当前启机阶段预测（如：何时并网？何时达到负荷？何时打闸？）
+1. 执行公共前置步骤，得到 `nodeId` 与 `eventName`。
+2. 调用 `stageRecord`：
+   - `nodeId` = 前置步骤返回的 `id`
+   - `eventName` = `启动` 或 `停机`
+     获取当前阶段信息、已完成阶段清单、阶段切换时间线。
+3. 额外调用`get_best_record`获取与`eventName`匹配的最优result_id
+   - 调用 `startStopDetails`（参数为最优的result_id）获取各阶段耗时
+4. 根据用户目标判断当前的阶段时间与最优的事件时间进行比较
 
 ## 兜底
 | 异常场景 | 文案编号 |
