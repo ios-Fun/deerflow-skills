@@ -4,8 +4,8 @@ parent: startstop-assistant
 allowed-tools:
   - startStopRecord
   - startStopDetails
-  - getStartStopTotalMaterial
   - startStopStatic
+  - getStartStopTotalMaterial
   - get_material_statistics
   - match_for_best
 ---
@@ -40,7 +40,7 @@ allowed-tools:
 - 本次停机消耗了多少水、煤、油和厂用电？
 
 **处理逻辑**
-1. 从对话上下文识别目标「本次启动」事件，提取机组标识、启停事件ID；若上下文无有效事件ID，返回F2兜底提示。
+1. 从对话上下文识别目标「本次启动」事件，提取机组标识、启停事件ID；若上下文无有效事件ID，请用户确认启停事件，或补充事件相关信息。
 2. 先调用`startStopRecord`工具获取最近10次的启停记录根据问答取相关启动/停止 参数为 `nodeId` 前置skill的id取值 筛选出来第一条数据
 2. 调用工具 `getStartStopTotalMaterial`，参数`resultId`为筛选出来数据的 result_id 获取该次启动总物耗、各阶段分项物耗、同工况启动历史均值数据。
 3. 输出组装：
@@ -105,9 +105,4 @@ allowed-tools:
 2. 调用 `getStartStopTotalMaterial` 取分阶段燃油明细。
 3. 计算各阶段油量占比（保留 1 位小数），按油量降序排列。
 4. 输出 TOP 阶段 + 占比 + 耗时，标注高耗油阶段与异常点提示。
-5. 无阶段明细 → 兜底 F6。
-
-## 公共约束
-- 单位与精度严格遵循 `global-rules.md`；
-- 数据缺失不得编造；
-- 输出末尾可选追加交互指引（如需）。
+5. 无阶段明细 → 回复用户该启停记录没有采集到物耗相关数据，无法进行查询。
