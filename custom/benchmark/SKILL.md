@@ -9,6 +9,7 @@ description:
   5. 新增寻优评估单查询：提取时间获取对应评估单。
   6. 单台机组指标偏离标杆排序：按偏差程度列出偏离明显指标，说明实际值、标杆值、偏差值/偏差率、可调性、所属系统，区分工况差异与值得运行调整项。
   7. 寻优模型相关判断：寻优模型分析原理，寻优模型构成等相关内容。
+  8. 指标历史对比：指标改善效果，指标变化情况等。
 
   所有设备名称作为参数，不写死在 Skill 逻辑中。
 
@@ -23,6 +24,8 @@ description:
   - 现在#1机有哪些指标偏离标杆比较明显？
   - 2机组排烟温度这个寻优模型是怎么分析的？为什么这个模型把这些参数作为影响因素？
 allowed-tools:
+  - match_for_best
+  - ask_clarification
   - get_unit_list
   - query_indicators
   - get_tag_values
@@ -30,6 +33,7 @@ allowed-tools:
   - benchmarkTarget # 获取指定节点下相关的标杆信息可能有多个 
   - benchmarkEvaluation #找到同一目标同工况下评估单因素对比信息
   - getSimilarityBenchmarkDetails
+  - resolve_formula_lineage
 ---
 
 # Explanation of Proper Names
@@ -57,16 +61,20 @@ allowed-tools:
   - **场景D（特定参数优化）**：明确问“某个参数该优化哪个”，如“引风机最该优化哪个参数”，通常指单设备的具体调整建议。
   - **场景E（新增寻优评估单查询）**：包含“新增/新的/新”且包含“寻优评估单/评估单”，或包含“新增寻优评估单查询”。
   - **场景F（指标偏离标杆排序）**：无设备名或泛指整机，询问“哪些指标偏离标杆明显 / 哪些没达标杆 / 按偏差程度排序”，且不包含“经济性 / 较优 / 一般 / 偏差评价”等整体经济性判断词。
+  - **场景G（寻优模型的优化建议）**：无设备名或泛指整机，询问“调整那些参数可以降低或提高某个指标 / 某些指标应该如何优化 / 调整优化某些因素后，指标有什么变化，效果怎么样”，且不包含“经济性 / 较优 / 一般 / 偏差评价”等整体经济性判断词。
+  - **场景H（历史对比）**：无设备名或泛指整机，询问“调整那些参数可以降低或提高某个指标 / 某些指标应该如何优化 / 调整优化某些因素后，指标有什么变化，效果怎么样”，且不包含“经济性 / 较优 / 一般 / 偏差评价”等整体经济性判断词。
 
 ## 数据获取
 
 ## 场景路由表
-| 用户问题类型     | 场景文件                                      |
-|------------|-------------------------------------------|
-| 机组经济性问题    | `scenarios/scenario-1-unit-status.md`     |
-| 设备系统参数优化问题 | `scenarios/scenario-2-optimize.md` |
-| 机组横向对比     | `scenarios/scenario-1-unit-contrast.md`   |
-| 新增寻优评估单查询  | `scenarios/scenario-1-evaluation.md`     |
-| 机组指标偏离标杆排序 | `scenarios/scenario-1-deviation-ranking.md` |
-| 寻优模型与判据解释  | `scenarios/scenario-1-model.md` |
+| 用户问题类型     | 场景文件                                         |
+|------------|----------------------------------------------|
+| 机组经济性问题    | `scenarios/scenario-1-unit-status.md`        |
+| 设备系统参数优化问题 | `scenarios/scenario-2-optimize.md`           |
+| 机组横向对比     | `scenarios/scenario-1-unit-contrast.md`      |
+| 新增寻优评估单查询  | `scenarios/scenario-1-evaluation.md`         |
+| 机组指标偏离标杆排序 | `scenarios/scenario-1-deviation-ranking.md`  |
+| 寻优模型与判据解释  | `scenarios/scenario-1-model.md`              |
+| 寻优模型的优化建议  | `scenarios/scenario-1-model-optimization.md` |
+| 历史对比  | `scenarios/scenario-1-history-compare.md`          |
 
