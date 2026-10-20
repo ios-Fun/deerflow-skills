@@ -1,0 +1,162 @@
+[
+  {
+    "roleKey": "plant-main‑director",
+    "roleName": "主控制室-主任",
+    "type":1
+  },
+  {
+    "roleKey": "plant-deputy‑director",
+    "roleName": "主控制室-副主任",
+    "type":1
+  },
+  {
+    "roleKey": "plant‑run‑analysis‑senior‑supervisor",
+    "roleName": "主控制室-运行分析高级主管",
+    "type":3
+  },
+  {
+    "roleKey": "plant‑shift‑supervisor",
+    "roleName": "主控制室-值长",
+    "type":2
+  },
+  {
+    "roleKey": "plant‑chief‑shift‑supervisor",
+    "roleName": "主控制室-总值长",
+    "type":1
+  },
+  {
+    "roleKey": "plant‑main‑operator",
+    "roleName": "主控制室-主值",
+    "type":3
+  },
+  {
+    "roleKey": "plant‑deputy‑operator",
+    "roleName": "主控制室-副值",
+    "type":3
+  },
+  {
+    "roleKey": "plant‑inspector",
+    "roleName": "主控制室-集控巡检",
+    "type":3
+  },
+  {
+    "roleKey": "plant‑chem‑operator",
+    "roleName": "主控制室-化学运行值班员",
+    "type":3
+  },
+  {
+    "roleKey": "plant‑chem‑team‑leader",
+    "roleName": "主控制室-化水班班长",
+    "type":2
+  },
+  {
+    "roleKey": "plant‑chem‑analyst",
+    "roleName": "主控制室-化学化验员",
+    "type":3
+  },
+  {
+    "roleKey": "equip‑main‑director",
+    "roleName": "设备维护部-主任",
+    "type":4
+  },
+  {
+    "roleKey": "equip-deputy-director",
+    "roleName": "设备维护部-副主任",
+    "type":4
+  },
+  {
+    "roleKey": "equip‑repair‑senior‑supervisor",
+    "roleName": "设备维护部-检修高级主管",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑safety‑supervisor",
+    "roleName": "设备维护部-安全主管",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑inspect‑chief",
+    "roleName": "设备维护部-点检长",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑inspector",
+    "roleName": "设备维护部-点检员",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑elec‑main‑leader",
+    "roleName": "设备维护部-电气维护班班长",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑elec‑main‑vice‑leader",
+    "roleName": "设备维护部-电气维护班副班长",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑elec‑main‑special‑worker",
+    "roleName": "设备维护部-电气维护班专责工",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑elec‑tech‑primary",
+    "roleName": "设备维护部-电气维护班技术员（一次）",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑elec‑tech‑secondary",
+    "roleName": "设备维护部-电气维护班技术员（二次）",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑elec‑hv‑test‑supervisor",
+    "roleName": "设备维护部-电气高压试验主管",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑thermal‑main‑leader",
+    "roleName": "设备维护部-热机维护班班长",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑thermal‑tech",
+    "roleName": "设备维护部-热机维护班技术员",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑thermal‑special‑worker",
+    "roleName": "设备维护部-热机维护班专责工",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑ct‑main‑leader",
+    "roleName": "设备维护部-热控维护班班长",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑ct‑tech",
+    "roleName": "设备维护部-热控维护班技术员",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑ct‑special‑worker",
+    "roleName": "设备维护部-热控维护班专责工",
+    "type":5
+  },
+  {
+    "roleKey": "equip‑admin",
+    "roleName": "设备维护部-管理员",
+    "type":5
+  },
+  {
+    "roleKey": "guest‑visitor",
+    "roleName": "游客",
+    "type":6
+  },
+  {
+    "roleKey": "super-admin",
+    "roleName": "超级管理员",
+    "type":7
+  }
+]
